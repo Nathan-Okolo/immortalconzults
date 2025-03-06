@@ -102,86 +102,91 @@
     }
     </style>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const apiUrl = 'https://msbm.org.uk/ads/apisearch?publisher=994406526&q=business+administration&co=GBR&cs=510&cat=PCC&start=1&limit=20';
-            const corsProxy = 'https://api.allorigins.win/get?url=';
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const apiUrl = 'https://msbm.org.uk/ads/apisearch?publisher=994406526&q=business+administration&co=GBR&cs=510&cat=PCC&start=1&limit=20';
+        const corsProxy = 'https://api.allorigins.win/get?url=';
 
-            fetch(corsProxy + encodeURIComponent(apiUrl))
-                .then(response => response.json())
-                .then(data => {
-                    const parser = new DOMParser();
-                    const xmlDoc = parser.parseFromString(data.contents, 'application/xml');
-                    const results = xmlDoc.getElementsByTagName('result');
-                    console.log("am here")
-                    const courses = [];
+        fetch(corsProxy + encodeURIComponent(apiUrl))
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(data.contents, 'application/xml');
+                const results = xmlDoc.getElementsByTagName('result');
+                console.log("am here")
+                const courses = [];
 
-                    for (let i = 0; i < results.length; i++) {
-                        const course = results[i];
-                        const courseTitle = course.getElementsByTagName('courseTitle')[0].textContent;
-                        const snippet = course.getElementsByTagName('snippet')[0].textContent;
-                        const url = course.getElementsByTagName('url')[0].textContent;
-                        const thumbnail = course.getElementsByTagName('thumbnail')[0].textContent;
-                        const cost = course.getElementsByTagName('amount')[0].textContent;
-                        const duration = course.getElementsByTagName('duration')[0].textContent;
-                        const currency = course.getElementsByTagName('currency')[0].textContent;
-                        const effort = course.getElementsByTagName('effort')[0].textContent;
-                        const bannerImage = course.getElementsByTagName('bannerImage')[0].textContent;
-                        const credits = course.getElementsByTagName('credits')[0].textContent;
+                for (let i = 0; i < results.length; i++) {
+                    const course = results[i];
+                    const courseTitle = course.getElementsByTagName('courseTitle')[0].textContent;
+                    const snippet = course.getElementsByTagName('snippet')[0].textContent;
+                    const url = course.getElementsByTagName('url')[0].textContent;
+                    const thumbnail = course.getElementsByTagName('thumbnail')[0].textContent;
+                    const cost = course.getElementsByTagName('amount')[0].textContent;
+                    const duration = course.getElementsByTagName('duration')[0].textContent;
+                    const currency = course.getElementsByTagName('currency')[0].textContent;
+                    const effort = course.getElementsByTagName('effort')[0].textContent;
+                    const bannerImage = course.getElementsByTagName('bannerImage')[0].textContent;
+                    const credits = course.getElementsByTagName('credits')[0].textContent;
 
-                        courses.push({
-                            img: thumbnail,
-                            students: 25, // Assuming a fixed number of students for now
-                            duration: duration,
-                            credits: credits,
-                            effort: effort,
-                            currency: currency,
-                            bannerImage: bannerImage,
-                            title: courseTitle,
-                            rating: 4.5, // Assuming a fixed rating for now
-                            reviews: 250, // Assuming a fixed number of reviews for now
-                            price: cost,
-                            url: url,
-                            snippet: snippet
-                        });
-                    }
-
-                    console.log('courses', courses)
-                    const coursesContainer = document.getElementById('courses-container');
-
-                    courses.forEach(course => {
-                        const courseElement = document.createElement('div');
-                        courseElement.className = 'col-lg-4 col-md-6 mb-4';
-                        courseElement.innerHTML = `
-        <div class="rounded overflow-hidden mb-2 course-card">
-            <img class="img-fluid" src="${course.img}" alt="">
-            <div class="bg-secondary p-4 card-body">
-                <div class="d-flex justify-content-between mb-1">
-                    <small class="m-0"><i class="fa fa-users text-primary mr-2"></i>${course.credits}</small>
-                    <small class="m-0"><i class="far fa-clock text-primary mr-2"></i>${course.duration}</small>
-                </div>
-                                <div class="d-flex justify-content-between mb-1">
-                    <small class="m-0"><i class="fa fa-users text-primary mr-2"></i>${course.effort}</small>
-                </div>
-                <a class="h5" href="${course.url}">${course.title}</a>
-                <p>${course.snippet}</p>
-            </div>
-                       <div class="border-top mt-0 pt-4 card-footer course-footer">
-                                <div class="d-flex justify-content-between">
-                                    <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>${course.rating} <small>(${course.reviews})</small></h6>
-                                    <h5 class="m-0">£${course.price}</h5>
-                                </div>
-                            </div>
-
-         
-        </div>
-    `;
-                        coursesContainer.appendChild(courseElement);
+                    courses.push({
+                        img: thumbnail,
+                        students: 25, // Assuming a fixed number of students for now
+                        duration: duration,
+                        credits: credits,
+                        effort: effort,
+                        currency: currency,
+                        bannerImage: bannerImage,
+                        title: courseTitle,
+                        rating: 4.5, // Assuming a fixed rating for now
+                        reviews: 250, // Assuming a fixed number of reviews for now
+                        price: cost,
+                        url: url,
+                        snippet: snippet
                     });
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        });
-    </script>
+                }
+
+                console.log('courses', courses)
+                const coursesContainer = document.getElementById('courses-container');
+
+                courses.forEach(course => {
+                    const courseElement = document.createElement('div');
+                    courseElement.className = 'col-lg-4 col-md-6 mb-4';
+                    courseElement.innerHTML = `
+    <div class="rounded overflow-hidden mb-2 course-card">
+        <img class="img-fluid" src="${course.img}" alt="">
+        <div class="bg-secondary p-4 card-body">
+            <div class="d-flex justify-content-between mb-1">
+                <small class="m-0"><i class="fa fa-users text-primary mr-2"></i>${course.credits}</small>
+                <small class="m-0"><i class="far fa-clock text-primary mr-2"></i>${course.duration}</small>
+            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                <small class="m-0"><i class="fa fa-users text-primary mr-2"></i>${course.effort}</small>
+            </div>
+            <a class="h5" href="${course.url}">${course.title}</a>
+            <p>${course.snippet}</p>
+        </div>
+                   <div class="border-top mt-0 pt-4 card-footer course-footer">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>${course.rating} <small>(${course.reviews})</small></h6>
+                                <h5 class="m-0">£${course.price}</h5>
+                            </div>
+                        </div>
+
+     
+    </div>
+`;
+                    coursesContainer.appendChild(courseElement);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    });
+</script>
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-white py-5 px-sm-3 px-lg-5" style="margin-top: 90px;">
